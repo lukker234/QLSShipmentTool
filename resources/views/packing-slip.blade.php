@@ -7,11 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         .container {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
+            box-sizing: border-box;
         }
         .order-details, .order-items, .shipping-label {
             margin-bottom: 20px;
@@ -28,6 +31,11 @@
         .order-items th, .order-items td {
             padding: 8px;
             text-align: left;
+        }
+        .shipping-label img {
+            max-width: 100%;
+            height: auto;
+            width: 50%;
         }
     </style>
 </head>
