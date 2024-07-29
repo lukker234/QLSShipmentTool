@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Packing Slip</title>
     <style>
+        h2 {
+            margin-top: 0;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -35,7 +38,7 @@
         .shipping-label img {
             max-width: 100%;
             height: auto;
-            width: 50%;
+            width: 40%;
         }
     </style>
 </head>
