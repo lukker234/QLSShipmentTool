@@ -6,11 +6,12 @@ use App\Services\OrderService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use RuntimeException;
 use Spatie\PdfToImage\Pdf as SpatiePdf;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ShipmentController extends Controller
 {
@@ -42,11 +43,29 @@ class ShipmentController extends Controller
         return view('shipment');
     }
 
-    public function createShipment(Request $request): Response|JsonResponse
+    public function createShipment(): View|JsonResponse
     {
-        $order = $this->orderService->getOrderData();
+        try {
+            $order = $this->orderService->getOrderData();
+            $response = $this->sendShipmentRequest($order);
+            $labelData = $response->json();
 
-        $response = Http::withBasicAuth($this->user, $this->password)
+            $pdfLabelPath = $this->downloadLabelPdf($labelData['data']['labels']['a6']);
+            $labelImagePath = $this->convertPdfToImage($pdfLabelPath);
+
+            $pdfPath = $this->generatePackingSlip($order, $labelImagePath);
+            $pdfUrl = route('show.packing-slip', ['filename' => basename($pdfPath)]);
+
+            return view('shipment', ['packing_slip_url' => $pdfUrl]);
+
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    private function sendShipmentRequest(array $order): \Illuminate\Http\Client\Response
+    {
+        return Http::withBasicAuth($this->user, $this->password)
             ->post("{$this->apiBaseUrl}/company/{$this->companyId}/shipment/create", [
                 'brand_id' => $this->brandId,
                 'reference' => $order['number'],
@@ -64,26 +83,54 @@ class ShipmentController extends Controller
                     'locality' => $order['delivery_address']['city'],
                     'country' => $order['delivery_address']['country'],
                     'email' => $order['billing_address']['email'],
-                ]
+                ],
             ]);
+    }
 
-        $labelData = $response->json();
-
-        $pdfLabelUrl = $labelData['data']['labels']['a6'];
-        $pdfContent = file_get_contents($pdfLabelUrl);
-
+    private function downloadLabelPdf(string $url): string
+    {
+        $pdfContent = file_get_contents($url);
         $pdfLabelPath = storage_path('app/label.pdf');
         file_put_contents($pdfLabelPath, $pdfContent);
 
+        return $pdfLabelPath;
+    }
+
+    private function convertPdfToImage(string $pdfLabelPath): string
+    {
         try {
             $pdf = new SpatiePdf($pdfLabelPath);
             $pdf->saveImage(storage_path('app/label.png'));
-            $labelImagePath = storage_path('app/label.png');
+
+            return storage_path('app/label.png');
         } catch (Exception $e) {
-            return response()->json(['error' => 'Could not convert PDF to image: ' . $e->getMessage()], 500);
+            throw new RuntimeException('Could not convert PDF to image: ' . $e->getMessage());
+        }
+    }
+
+    private function generatePackingSlip(array $order, string $labelImagePath): string
+    {
+        $pdf = PDF::loadView('packing-slip', [
+            'order' => $order,
+            'label' => $labelImagePath,
+        ]);
+
+        $pdfFileName = 'packing-slip-' . time() . '.pdf';
+        $pdfPath = Storage::disk('public')->path($pdfFileName);
+        $pdf->save($pdfPath);
+
+        return $pdfPath;
+    }
+
+    public function showPackingSlip($filename): BinaryFileResponse
+    {
+        $path = Storage::disk('public')->path($filename);
+
+        if (!Storage::disk('public')->exists($filename)) {
+            abort(404);
         }
 
-        $pdf = PDF::loadView('packing-slip', ['order' => $order, 'label' => $labelImagePath]);
-        return $pdf->download('packing-slip.pdf');
+        return response()->file($path);
     }
+
 }

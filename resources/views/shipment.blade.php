@@ -6,9 +6,9 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <title>Shipment Tool</title>
 </head>
-<body class="bg-gray-100 h-screen antialiased leading-none">
+<body class="bg-[#4697f7] h-screen antialiased leading-none">
 <div class="flex justify-center items-center h-full">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-1/2">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-3/4">
         <h1 class="text-2xl font-bold mb-4">Create Shipment</h1>
         <form action="{{ route('create.shipment') }}" method="POST">
             @csrf
@@ -30,6 +30,16 @@
                 </button>
             </div>
         </form>
+
+        @if(isset($packing_slip_url))
+            <div class="mt-8">
+                <h2 class="text-xl font-bold mb-4">Packing Slip</h2>
+                <iframe src="{{ $packing_slip_url }}" width="100%" height="600px" class="border rounded"></iframe>
+                <a href="{{ $packing_slip_url }}" download class="mt-4 inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Download Packing Slip
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 </body>

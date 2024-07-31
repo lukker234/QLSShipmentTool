@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 Route::get('/', [ShipmentController::class, 'index']);
 Route::post('/create-shipment', [ShipmentController::class, 'createShipment'])->name('create.shipment');
+Route::get('/packing-slip/{filename}', [ShipmentController::class, 'showPackingSlip'])->name('show.packing-slip');
