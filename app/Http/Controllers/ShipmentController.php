@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\OrderService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -20,8 +22,6 @@ class ShipmentController extends Controller
     protected mixed $apiBaseUrl;
     protected mixed $companyId;
     protected mixed $brandId;
-    protected mixed $productId;
-    protected mixed $productCombinationId;
 
     protected OrderService $orderService;
 
@@ -32,8 +32,6 @@ class ShipmentController extends Controller
         $this->apiBaseUrl = env('QLS_API_BASE_URL');
         $this->companyId = env('COMPANY_ID');
         $this->brandId = env('BRAND_ID');
-        $this->productId = env('PRODUCT_ID');
-        $this->productCombinationId = env('PRODUCT_COMBINATION_ID');
 
         $this->orderService = $orderService;
     }
@@ -43,11 +41,13 @@ class ShipmentController extends Controller
         return view('shipment');
     }
 
-    public function createShipment(): View|JsonResponse
+    public function createShipment(Request $request): View|JsonResponse
     {
         try {
+            $orderData = $request->only(['weight', 'product_id', 'product_combination_id']);
             $order = $this->orderService->getOrderData();
-            $response = $this->sendShipmentRequest($order);
+
+            $response = $this->sendShipmentRequest($order, $orderData);
             $labelData = $response->json();
 
             $pdfLabelPath = $this->downloadLabelPdf($labelData['data']['labels']['a6']);
@@ -63,15 +63,15 @@ class ShipmentController extends Controller
         }
     }
 
-    private function sendShipmentRequest(array $order): \Illuminate\Http\Client\Response
+    private function sendShipmentRequest(array $order, array $orderData): Response
     {
         return Http::withBasicAuth($this->user, $this->password)
             ->post("{$this->apiBaseUrl}/company/{$this->companyId}/shipment/create", [
                 'brand_id' => $this->brandId,
                 'reference' => $order['number'],
-                'weight' => 1000,
-                'product_id' => $this->productId,
-                'product_combination_id' => $this->productCombinationId,
+                'weight' => $orderData['weight'],
+                'product_id' => $orderData['product_id'],
+                'product_combination_id' => $orderData['product_combination_id'],
                 'cod_amount' => 0,
                 'piece_total' => 1,
                 'receiver_contact' => [
