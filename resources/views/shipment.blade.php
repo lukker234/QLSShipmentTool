@@ -35,9 +35,6 @@
             <div class="mt-8">
                 <h2 class="text-xl font-bold mb-4">Packing Slip</h2>
                 <iframe src="{{ $packing_slip_url }}" width="100%" height="600px" class="border rounded"></iframe>
-                <a href="{{ $packing_slip_url }}" download class="mt-4 inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Download Packing Slip
-                </a>
             </div>
         @endif
     </div>
