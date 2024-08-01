@@ -16,19 +16,19 @@
             @csrf
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1" for="order_nr">Order number</label>
-                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="order_nr" name="order_nr" placeholder="Enter order number" required>
+                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="order_nr" type="number" name="order_nr" placeholder="Enter order number (958201)" required>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1" for="weight">Weight (grams)</label>
-                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="weight" type="number" name="weight" placeholder="Enter weight" value="1000" required>
+                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="weight" type="number" name="weight" placeholder="Enter weight" required>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1" for="product_id">Product ID</label>
-                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="product_id" type="number" name="product_id" required>
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="product_id">Product ID (shipment category id)</label>
+                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="product_id" type="number" name="product_id" value="2" required>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1" for="product_combination_id">Product Combination ID</label>
-                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="product_combination_id" type="number" name="product_combination_id" required>
+                <label class="block text-sm font-medium text-gray-700 mb-1" for="product_combination_id">Product Combination ID (shipment category options id)</label>
+                <input class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="product_combination_id" type="number" name="product_combination_id" value="3" required>
             </div>
             <div>
                 <button id="submitButton" type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out hover:bg-white hover:text-blue-600 border-2 border-transparent hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex items-center justify-center">
