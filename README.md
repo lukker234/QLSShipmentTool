@@ -5,7 +5,7 @@ QLSShipmentTool is a Laravel-based application designed to streamline the creati
 ## Features
 
 - Create shipments with specified product IDs and combinations.
-- Download and convert shipping labels from PDF to PNG.
+- Download shipping labels in PDF format.
 - Generate packing slips with order details and shipping labels.
 
 ## Requirements
