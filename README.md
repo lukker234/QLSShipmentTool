@@ -11,6 +11,7 @@ QLSShipmentTool is a Laravel-based application designed to streamline the creati
 ## Requirements
 
 - PHP 8.0 or higher
+- ImageMagick (Installation at bottom of Readme - Acknowledgments)
 - Laravel 9.x
 - Composer
 - Node.js and NPM
@@ -97,3 +98,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [Laravel](https://laravel.com)
 - [Spatie PDF to Image](https://github.com/spatie/pdf-to-image)
 - [Barryvdh DomPDF](https://github.com/barryvdh/laravel-dompdf)
+- [ImageMagick](https://imagemagick.org/script/download.php)
