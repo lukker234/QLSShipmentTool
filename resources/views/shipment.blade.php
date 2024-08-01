@@ -54,9 +54,9 @@
 
 <script>
     document.getElementById('shipmentForm').addEventListener('submit', function() {
-        var button = document.getElementById('submitButton');
-        var buttonText = document.getElementById('buttonText');
-        var loadingIcon = document.getElementById('loadingIcon');
+        const button = document.getElementById('submitButton');
+        const buttonText = document.getElementById('buttonText');
+        const loadingIcon = document.getElementById('loadingIcon');
 
         button.disabled = true;
         buttonText.textContent = 'Creating Shipment...';

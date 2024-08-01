@@ -116,7 +116,8 @@ class ShipmentController extends Controller
             'label' => $labelImagePath,
         ]);
 
-        $pdfFileName = 'packing-slip-' . time() . '.pdf';
+        $orderId = $orderData['order_nr'] ?? $order['number'];
+        $pdfFileName = 'packing-slip-' . $orderId . '.pdf';
         $pdfPath = Storage::disk('public')->path($pdfFileName);
         $pdf->save($pdfPath);
 
