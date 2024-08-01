@@ -27,11 +27,11 @@ class ShipmentController extends Controller
 
     public function __construct(OrderService $orderService)
     {
-        $this->user = env('QLS_API_USER');
-        $this->password = env('QLS_API_PASSWORD');
-        $this->apiBaseUrl = env('QLS_API_BASE_URL');
-        $this->companyId = env('COMPANY_ID');
-        $this->brandId = env('BRAND_ID');
+        $this->user = config('services.qls_api.user');
+        $this->password = config('services.qls_api.password');
+        $this->apiBaseUrl = config('services.qls_api.base_url');
+        $this->companyId = config('services.company.id');
+        $this->brandId = config('services.brand.id');
 
         $this->orderService = $orderService;
     }

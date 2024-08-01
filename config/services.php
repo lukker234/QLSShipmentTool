@@ -31,4 +31,18 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'qls_api' => [
+        'user' => env('QLS_API_USER', 'default_user'),
+        'password' => env('QLS_API_PASSWORD', 'default_password'),
+        'base_url' => env('QLS_API_BASE_URL', 'https://api.example.com'),
+    ],
+
+    'company' => [
+        'id' => env('COMPANY_ID', 'default_company_id'),
+    ],
+
+    'brand' => [
+        'id' => env('BRAND_ID', 'default_brand_id'),
+    ],
+
 ];
