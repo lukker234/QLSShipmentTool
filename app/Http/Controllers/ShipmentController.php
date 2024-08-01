@@ -44,7 +44,7 @@ class ShipmentController extends Controller
     public function createShipment(Request $request): View|JsonResponse
     {
         try {
-            $orderData = $request->only(['weight', 'product_id', 'product_combination_id']);
+            $orderData = $request->only(['order_nr', 'weight', 'product_id', 'product_combination_id']);
             $order = $this->orderService->getOrderData();
 
             $response = $this->sendShipmentRequest($order, $orderData);
@@ -53,7 +53,7 @@ class ShipmentController extends Controller
             $pdfLabelPath = $this->downloadLabelPdf($labelData['data']['labels']['a6']);
             $labelImagePath = $this->convertPdfToImage($pdfLabelPath);
 
-            $pdfPath = $this->generatePackingSlip($order, $labelImagePath);
+            $pdfPath = $this->generatePackingSlip($order, $orderData, $labelImagePath);
             $pdfUrl = route('show.packing-slip', ['filename' => basename($pdfPath)]);
 
             return view('shipment', ['packing_slip_url' => $pdfUrl]);
@@ -68,7 +68,7 @@ class ShipmentController extends Controller
         return Http::withBasicAuth($this->user, $this->password)
             ->post("{$this->apiBaseUrl}/company/{$this->companyId}/shipment/create", [
                 'brand_id' => $this->brandId,
-                'reference' => $order['number'],
+                'reference' => $orderData['order_nr'],
                 'weight' => $orderData['weight'],
                 'product_id' => $orderData['product_id'],
                 'product_combination_id' => $orderData['product_combination_id'],
@@ -108,10 +108,11 @@ class ShipmentController extends Controller
         }
     }
 
-    private function generatePackingSlip(array $order, string $labelImagePath): string
+    private function generatePackingSlip(array $order, array $orderData, string $labelImagePath): string
     {
         $pdf = PDF::loadView('packing-slip', [
             'order' => $order,
+            'orderData' => $orderData,
             'label' => $labelImagePath,
         ]);
 

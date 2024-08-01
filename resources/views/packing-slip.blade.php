@@ -45,7 +45,7 @@
 <body>
 <div class="container">
     <div class="order-details">
-        <h2>Order #{{ $order['number'] }}</h2>
+        <h2>Order #{{ $orderData['order_nr'] }}</h2>
         <p><strong>Billing Address:</strong></p>
         <p>{{ $order['billing_address']['name'] }}<br>
             {{ $order['billing_address']['street'] }} {{ $order['billing_address']['housenumber'] }}<br>
