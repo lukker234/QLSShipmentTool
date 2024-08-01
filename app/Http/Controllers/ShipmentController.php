@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use RuntimeException;
 use Spatie\PdfToImage\Pdf as SpatiePdf;
@@ -43,6 +44,17 @@ class ShipmentController extends Controller
 
     public function createShipment(Request $request): View|JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'order_nr' => 'required|string',
+            'weight' => 'required|integer',
+            'product_id' => 'required|integer',
+            'product_combination_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
         try {
             $orderData = $request->only(['order_nr', 'weight', 'product_id', 'product_combination_id']);
             $order = $this->orderService->getOrderData();
